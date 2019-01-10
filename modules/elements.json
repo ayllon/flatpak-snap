@@ -1,0 +1,22 @@
+{
+    "name": "elements",
+    "buildsystem": "cmake",
+    "builddir": true,
+    "config-opts": [
+        "-DBOOST_ROOT=/app",
+        "-DELEMENTS_BUILD_TESTS=OFF"
+    ],
+    "build-options": {
+        "env": {
+            "LDFLAGS": ""
+        }
+    },
+    "sources": [
+        {
+            "type": "git",
+            "path": "$HOME/Work/Projects/Elements",
+            "url": "https://github.com/degauden/Elements.git",
+            "tag": "5.2.2"
+        }
+    ]
+}

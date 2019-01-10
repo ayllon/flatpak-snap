@@ -1,0 +1,118 @@
+{
+    "app-id": "ch.unige.astro.sextractorxx",
+    "runtime": "org.freedesktop.Platform",
+    "runtime-version": "18.08",
+    "sdk": "org.freedesktop.Sdk",
+    "command": "SExtractor",
+    "build-options": {
+        "env": {
+            "VERBOSE": "1"
+        }
+    },
+    "finish-args": [
+        "--filesystem=host"
+    ],
+    "cleanup": [
+        "/include",
+        "/lib/*.a"
+    ],
+    "modules": [
+        "modules/cfitsio.json",
+        "modules/ccfits.json",
+        "modules/boost.json",
+        "modules/log4cpp.json",
+        "modules/pytest.json",
+        "modules/wcslib.json",
+        {
+            "name": "lapack",
+            "buildsystem": "cmake",
+            "builddir": true,
+            "config-opts": [
+                "-DBUILD_SHARED_LIBS=ON"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://www.netlib.org/lapack/lapack-3.8.0.tar.gz",
+                    "sha256": "deb22cc4a6120bff72621155a9917f485f96ef8319ac074a7afbc68aab88bcf6"
+                }
+            ]
+        },
+        {
+            "name": "levmar",
+            "buildsystem": "simple",
+            "build-commands": [
+                "make -f Makefile.so",
+                "install -m 644 levmar.h /app/include",
+                "install -m 644 liblevmar.so* /app/lib"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://src.fedoraproject.org/repo/pkgs/rpms/levmar/levmar-2.5.tgz/md5/7ca14d79eda6e985f8355b719ae47d35/levmar-2.5.tgz",
+                    "sha256": "b70f6ac3eff30ec29150e217b137312cb84e85529815efea2c12e4eab74b9d75"
+                },
+                {
+                    "type": "patch",
+                    "path": "levmar_shared.patch"
+                }
+           ]
+        },
+        {
+            "name": "fftw3",
+            "buildsystem": "simple",
+            "build-commands": [
+                "./configure --prefix=/app --enable-shared --disable-fortran --enable-sse2 --enable-single",
+                "make install -j $FLATPAK_BUILDER_N_JOBS",
+                "./configure --prefix=/app --enable-shared --disable-fortran --enable-sse2",
+                "make install -j $FLATPAK_BUILDER_N_JOBS",
+                "./configure --prefix=/app --enable-shared --disable-fortran --enable-long-double",
+                "make install -j $FLATPAK_BUILDER_N_JOBS"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "http://fftw.org/fftw-3.3.8.tar.gz",
+                    "sha256": "6113262f6e92c5bd474f2875fa1b01054c4ad5040f6b0da7c03c98821d9ae303"
+                }
+            ]
+        },
+        {
+            "name": "yaml-cpp",
+            "buildsystem": "cmake",
+            "config-opts": [
+                "-DBUILD_SHARED_LIBS=ON"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/jbeder/yaml-cpp/archive/yaml-cpp-0.6.2.tar.gz",
+                    "sha256": "e4d8560e163c3d875fd5d9e5542b5fd5bec810febdcba61481fe5fc4e6b1fd05"
+                }
+            ]
+        },
+        "modules/elements.json",
+        "modules/alexandria.json",
+        {
+            "name": "sextractorxx",
+            "buildsystem": "cmake",
+            "builddir": true,
+            "config-opts": [
+                "-DBOOST_ROOT=/app",
+                "-DELEMENTS_BUILD_TESTS=OFF",
+                "-DPYTHON_EXPLICIT_VERSION=2"
+            ],
+            "build-options": {
+                "env": {
+                    "LDFLAGS": ""
+                }
+            },
+            "sources": [
+                {
+                    "type": "dir",
+                    "path": "/home/aalvarez/Work/Projects/SExtractorxx"
+                }
+            ]
+        }
+    ]
+}

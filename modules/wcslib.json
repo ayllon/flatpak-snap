@@ -1,0 +1,24 @@
+{
+    "name": "wcslib",
+    "buildsystem": "simple",
+    "build-commands": [
+        "./configure --prefix=/app --without-pgplot --disable-fortran",
+        "make -j $FLATPAK_BUILDER_N_JOBS",
+        "mkdir -p /app/include/wcslib",
+        "mkdir -p /app/pkgconfig",
+        "install -m 644 wcsconfig.h /app/include/wcslib",
+        "install -m 644 C/*.h /app/include/wcslib",
+        "install -m 644 C/libwcs.so.5.20 /app/lib",
+        "ln -s libwcs.so.5.20 /app/lib/libwcs.so.5",
+        "ln -s libwcs.so.5 /app/lib/libwcs.so",
+        "install -m 644 wcslib.pc /app/pkgconfig/wcslib.pc"
+    ],
+    "sources": [
+        {
+            "type": "archive",
+            "url": "http://ftp.debian.org/debian/pool/main/w/wcslib/wcslib_5.20.orig.tar.bz2",
+            "sha256": "521a10089af49479f94943a4b70e8c4917a95b3a862043e68be2a499f1807743"
+        }
+    ]
+}
+

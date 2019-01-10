@@ -1,0 +1,17 @@
+{
+    "name": "cfitsio",
+    "buildsystem": "simple",
+    "build-commands": [
+        "./configure --prefix=/app --enable-reentrant",
+        "make shared",
+        "make install"
+    ],
+    "sources": [
+        {
+            "type": "archive",
+            "url": "https://heasarc.gsfc.nasa.gov/FTP/software/fitsio/c/cfitsio3450.tar.gz",
+            "sha256": "bf6012dbe668ecb22c399c4b7b2814557ee282c74a7d5dc704eb17c30d9fb92e"
+        }
+    ]
+}
+

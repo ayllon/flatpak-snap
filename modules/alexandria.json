@@ -1,0 +1,22 @@
+{
+    "name": "alexandria",
+    "buildsystem": "cmake",
+    "builddir": true,
+    "config-opts": [
+        "-DBOOST_ROOT=/app",
+        "-DELEMENTS_BUILD_TESTS=OFF"
+    ],
+    "build-options": {
+        "env": {
+            "LDFLAGS": ""
+        }
+    },
+    "sources": [
+        {
+            "type": "git",
+            "url": "https://github.com/nikoapos/Alexandria.git",
+            "branch": "develop",
+            "path": "$HOME/Work/Projects/Alexandria"
+        }
+    ]
+}

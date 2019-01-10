@@ -1,0 +1,20 @@
+{
+    "name": "boost",
+    "buildsystem": "simple",
+    "build-commands": [
+        "./bootstrap.sh --prefix=/app --with-libraries=date_time,filesystem,iostreams,locale,regex,system,thread,python,program_options,test,serialization",
+        "./b2 --build-type=minimal link=shared -j $FLATPAK_BUILDER_N_JOBS",
+        "./b2 --build-type=minimal link=shared install"
+    ],
+    "post-install": [
+        "ln -s libboost_python27.so /app/lib/libboost_python.so"
+    ],
+    "sources": [
+        {
+            "type": "archive",
+            "url": "https://dl.bintray.com/boostorg/release/1.69.0/source/boost_1_69_0.tar.bz2",
+            "sha256": "8f32d4617390d1c2d16f26a27ab60d97807b35440d45891fa340fc2648b04406"
+        }
+    ]
+}
+
