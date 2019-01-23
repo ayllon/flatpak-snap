@@ -1,3 +1,8 @@
 *.flatpak
+*.snap
 .flatpak-builder
+.snapcraft
 build-dir
+parts
+prime
+stage

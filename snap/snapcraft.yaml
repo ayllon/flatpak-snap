@@ -1,0 +1,101 @@
+name: sextractor
+version: "0.1-git"
+grade: devel
+base: core18
+summary: SExtractor
+description: To Fill
+
+confinement: devmode
+
+apps:
+    sextractorxx:
+        command: bin/SExtractor
+
+parts:
+    elements:
+        plugin: cmake
+        configflags:
+            - -DPYTHON_EXPLICIT_VERSION=3
+            - -DCMAKE_CXX_STANDARD=11
+            - -DELEMENTS_BUILD_TESTS=OFF
+            - -DCMAKE_VERBOSE_MAKEFILE=ON
+            - -DCMAKE_INSTALL_PREFIX=${SNAPCRAFT_STAGE}
+            - -DSQUEEZED_INSTALL=ON
+        make-install-var: ""
+        source-type: git
+        source: https://github.com/degauden/Elements.git
+        source-tag: "5.2.2"
+        build-packages:
+            - g++
+            - python3
+            - python3-pytest
+            - liblog4cpp5-dev
+            - libboost-filesystem-dev
+            - libboost-program-options-dev
+            - libboost-regex-dev
+            - libboost-system-dev
+            - libboost-test-dev
+            - libboost-thread-dev
+    alexandria:
+        after:
+            - elements
+        plugin: cmake
+        configflags:
+            - -DPYTHON_EXPLICIT_VERSION=3
+            - -DCMAKE_CXX_STANDARD=11
+            - -DELEMENTS_BUILD_TESTS=OFF
+            - -DCMAKE_VERBOSE_MAKEFILE=ON
+            - -DCMAKE_INSTALL_PREFIX=${SNAPCRAFT_STAGE}
+            - -DSQUEEZED_INSTALL=ON
+        make-install-var: ""
+        source-type: git
+        source: https://github.com/nikoapos/Alexandria.git
+        source-branch: develop
+        build-packages:
+            - libcfitsio-dev
+            - libccfits-dev
+    levmar:
+        source-type: tar
+        source: "https://src.fedoraproject.org/repo/pkgs/rpms/levmar/levmar-2.5.tgz/md5/7ca14d79eda6e985f8355b719ae47d35/levmar-2.5.tgz"
+        plugin: make
+        override-build: |
+            patch -p1 < ${SNAPCRAFT_STAGE}/../flatpak/levmar_shared.patch
+            make -f Makefile.so
+            install -m 644 ${SNAPCRAFT_PART_SRC}/levmar.h ${SNAPCRAFT_STAGE}/include
+            install -m 644 liblevmar.so.2.2 ${SNAPCRAFT_STAGE}/lib
+            ln -s liblevmar.so.2.2 ${SNAPCRAFT_STAGE}/lib/liblevmar.so.2
+            ln -s liblevmar.so.2 ${SNAPCRAFT_STAGE}/lib/liblevmar.so
+        build-packages:
+            - liblapack-dev
+    sextractorxx:
+        after:
+            - alexandria
+            - levmar
+        plugin: cmake
+        configflags:
+            - -DPYTHON_EXPLICIT_VERSION=3
+            - -DCMAKE_CXX_STANDARD=11
+            - -DELEMENTS_BUILD_TESTS=OFF
+            - -DCMAKE_VERBOSE_MAKEFILE=ON
+            - -DCMAKE_INSTALL_PREFIX=${SNAPCRAFT_STAGE}
+            - -DSQUEEZED_INSTALL=ON
+            - -DCMAKE_CXX_FLAGS="-Wl,-L${SNAPCRAFT_STAGE}/lib"
+        make-install-var: ""
+        source-type: tar
+        source: "/home/aalvarez/.cache/Homebrew/sextractorxx--0.1.tar.gz"
+        filesets:
+            libraries: [lib/*.so]
+            python: [lib/python3.*]
+            bin: [bin/SExtractor]
+        prime:
+            - $libraries
+            - $python
+            - $bin
+        build-packages:
+            - libboost-python-dev
+            - libboost-timer-dev
+            - libfftw3-dev
+            - libpython3-dev
+            - libyaml-cpp-dev
+            - wcslib-dev
+
