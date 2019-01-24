@@ -63,8 +63,8 @@ parts:
             make -f Makefile.so
             install -m 644 ${SNAPCRAFT_PART_SRC}/levmar.h ${SNAPCRAFT_STAGE}/include
             install -m 644 liblevmar.so.2.2 ${SNAPCRAFT_STAGE}/lib
-            ln -s liblevmar.so.2.2 ${SNAPCRAFT_STAGE}/lib/liblevmar.so.2
-            ln -s liblevmar.so.2 ${SNAPCRAFT_STAGE}/lib/liblevmar.so
+            ln -fs liblevmar.so.2.2 ${SNAPCRAFT_STAGE}/lib/liblevmar.so.2
+            ln -fs liblevmar.so.2 ${SNAPCRAFT_STAGE}/lib/liblevmar.so
         build-packages:
             - liblapack-dev
     sextractorxx:
@@ -79,7 +79,7 @@ parts:
             - -DCMAKE_VERBOSE_MAKEFILE=ON
             - -DCMAKE_INSTALL_PREFIX=${SNAPCRAFT_STAGE}
             - -DSQUEEZED_INSTALL=ON
-            - -DCMAKE_CXX_FLAGS="-Wl,-L${SNAPCRAFT_STAGE}/lib"
+            - -DCMAKE_LINKER_MODULE_FLAGS="-L${SNAPCRAFT_STAGE}/lib"
         make-install-var: ""
         source-type: tar
         source: "/home/aalvarez/.cache/Homebrew/sextractorxx--0.1.tar.gz"
@@ -98,4 +98,5 @@ parts:
             - libpython3-dev
             - libyaml-cpp-dev
             - wcslib-dev
-
+        stage-packages:
+            - python3-numpy
